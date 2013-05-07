@@ -1,0 +1,7 @@
+{
+	"name": "node-htop",
+	"version": "0.1.0",
+	"dependencies": {
+		"socket.io-client" : "0.9.x"
+    }
+}
