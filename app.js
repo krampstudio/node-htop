@@ -4,8 +4,7 @@
  */
 
 var express = require('express')
-  , routes = require('./routes')
-  , user = require('./routes/user')
+  , controller = require('./controller')
   , http = require('http')
   , path = require('path');
 
@@ -26,7 +25,7 @@ app.use(require('less-middleware')({
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.errorHandler());
 
-app.get('/', routes.index);
+//controller.index(app);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));

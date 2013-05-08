@@ -1,4 +1,8 @@
 node_modules
+npm-debug.log
 
+.c9revisions
 .project
 .settings
+
+
