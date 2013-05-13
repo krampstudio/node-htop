@@ -6,7 +6,7 @@
  */
 
 /**
- * Test for the module mem
+ * Test for the module poller/mem
  */
 exports.ProcInfoTest = {
 
@@ -17,7 +17,7 @@ exports.ProcInfoTest = {
     setUp: function(done) {
         'use strict';
     
-        this.mem = require('../lib/mem');
+        this.mem = require('../lib/poller/mem');
         done();
     },
 
@@ -41,14 +41,16 @@ exports.ProcInfoTest = {
     'testPoll': function(test) {
         'use strict';
     
-        test.expect(4);
+        test.expect(6);
 
         this.mem.poll(function(err, data){
 
             test.equal(err, null);
             test.equal((typeof data), 'object');
-            test.ok(data.total > 0);
-            test.ok(data.current > 0);
+            test.ok(data.memtotal > 256);       //i hope the tested system has more than 256b of memory, instead the test would never run...
+            test.ok(data.memfree > 0);
+            test.ok(data.swaptotal > 0);
+            test.ok(data.swapfree > 0);
             test.done();
         });
     }

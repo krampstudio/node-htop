@@ -7,7 +7,7 @@ module.exports = function(grunt) {
         dist: {
             src: ['lib/*.js', 'controller/*.js', 'app.js'],
             options: {
-                destination: 'doc'
+                destination: 'build/doc'
             }
         }
     },
