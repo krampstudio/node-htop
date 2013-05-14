@@ -19,9 +19,6 @@ exports.StatPollerTest = {
         
         //the pseudo class
         this.StatPoller = require('../lib/statpoller').StatPoller;
-
-        //the pseudo instance
-        this.statPoller = new this.StatPoller();
         done();
     },
 
@@ -32,15 +29,31 @@ exports.StatPollerTest = {
     'testStructure': function(test) {
         'use strict';
     
-        test.notStrictEqual(this.statPoller, undefined, 'the module should be available');
-        test.strictEqual(typeof this.statPoller, 'object', 'the statPoller should be an instanc');
-        test.ok(this.statPoller.hasOwnProperty('delay'));
-        test.equal(this.statPoller.delay, 500, 'the default value of the delay should be 500ms');
-
+        var aPoller = new this.StatPoller();
+    
+        test.notStrictEqual(aPoller, undefined, 'the module should be available');
+        test.strictEqual(typeof aPoller, 'object', 'the statPoller should be an instanc');
+        test.ok(aPoller.hasOwnProperty('options'));
+        test.equal(aPoller.options.delay, 1000, 'the default value of the delay should be 500ms');
+        
         var otherPoller = new this.StatPoller({delay : 775});
-        test.equal(otherPoller.delay, 775, 'the value of the delay should be 775ms');
+        test.equal(otherPoller.options.delay, 775, 'the value of the delay should be 775ms');
 
         test.done();
+    },
+    
+    'testStart': function(test) {
+        'use strict';
+        
+        test.expect(1);
+        
+        var aPoller = new this.StatPoller();
+        aPoller.on('start', function(){
+            test.ok(true, 'the poller has started');
+            test.done();
+        });
+        aPoller.start();
+        aPoller.stop();
     }
 
 };
