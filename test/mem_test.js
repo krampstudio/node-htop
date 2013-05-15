@@ -41,11 +41,10 @@ exports.ProcInfoTest = {
     'testPoll': function(test) {
         'use strict';
     
-        test.expect(6);
+        test.expect(5);
 
-        this.mem.poll(function(err, data){
+        this.mem.poll(function(data){
 
-            test.equal(err, null);
             test.equal((typeof data), 'object');
             test.ok(data.memtotal > 256);       //i hope the tested system has more than 256b of memory, instead the test would never run...
             test.ok(data.memfree > 0);
