@@ -2,7 +2,7 @@ module.exports = function(grunt) {
     'use strict';
 
     var sources = ['lib/**/*.js', 'controller/*.js', 'app.js'],
-        tests = ['test/*_test.js'],
+        tests = ['test/**/*_test.js'],
         buildDir = 'build/';
 
     // Project configuration.

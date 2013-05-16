@@ -17,7 +17,7 @@ exports.ProcInfoTest = {
     setUp: function(done) {
         'use strict';
     
-        this.mem = require('../lib/poller/mem');
+        this.mem = require('../../lib/poller/mem');
         done();
     },
 
