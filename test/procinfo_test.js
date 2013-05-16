@@ -58,8 +58,8 @@ Active(file):    3256184 kB\n';
         this.procinfo.format(content, function(err, infos){
             test.equal(err, null);
             test.equal((typeof infos), 'object');
-            test.equal(infos['MemTotal'], '7513900 kB');
-            test.equal(parseInt(infos['MemFree'], 10), 122384);
+            test.equal(infos.MemTotal, '7513900 kB');
+            test.equal(parseInt(infos.MemFree, 10), 122384);
             test.done();
         });
     }

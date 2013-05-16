@@ -52,7 +52,7 @@ exports.StatPollerTest = {
         var aPoller = new this.StatPoller();
         aPoller.on('start', function(){
             test.ok(true, 'the poller has started');
-            test.equals(_.keys(aPoller.pollers).length, aPoller.intervalHandlers.length, 'there should be the same number of handlers than pollers')
+            test.equals(_.keys(aPoller.pollers).length, aPoller.intervalHandlers.length, 'there should be the same number of handlers than pollers');
             test.done();
         });
         aPoller.start();
