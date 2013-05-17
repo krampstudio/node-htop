@@ -4,7 +4,8 @@ var express = require('express'),
     path = require('path'),
     app = express(),
     server = http.createServer(app),
-    io = require('socket.io').listen(server);
+    io = require('socket.io').listen(server),
+    logger = require('./lib/logger')(7);
 
 
 app.set('port', process.env.PORT || 3000);
@@ -24,6 +25,6 @@ app.use(express.errorHandler());
 
 controllers.stat(io);
 
-server.listen(app.get('port'), function(){
-  console.log('Express server listening on port ' + app.get('port'));
+server.listen(app.get('port'), function listenServer(){
+  logger.log('info', 'Express server listening on port ' + app.get('port'));
 });
