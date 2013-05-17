@@ -1,14 +1,11 @@
-
-/**
- * Module dependencies.
- */
-
 var express = require('express'), 
-    controller = require('./controller'), 
+    controllers = require('./controller'), 
     http = require('http'), 
-    path = require('path');
+    path = require('path'),
+    app = express(),
+    server = http.createServer(app),
+    io = require('socket.io').listen(server);
 
-var app = express();
 
 app.set('port', process.env.PORT || 3000);
 app.use(express.favicon());
@@ -25,8 +22,8 @@ app.use(require('less-middleware')({
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.errorHandler());
 
-//controller.index(app);
+controllers.stat(io);
 
-http.createServer(app).listen(app.get('port'), function(){
+server.listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });

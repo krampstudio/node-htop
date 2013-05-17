@@ -1,13 +1,10 @@
-#ignore npm installed modules and logs
+#installed deps, logs, buils 
 node_modules
+public/js/lib/*
 npm-debug.log
-
-#build dir
 build
 
 #ide files
 .c9revisions
 .project
 .settings
-
-
