@@ -16,10 +16,10 @@ app.use(express.methodOverride());
 app.use(express.cookieParser('xxx'));
 app.use(express.session());
 app.use(app.router);
-app.use(require('less-middleware')({
+/*app.use(require('less-middleware')({
 	src: __dirname + '/public/css',
 	debug : true
-}));
+}));*/
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.errorHandler());
 

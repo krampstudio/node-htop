@@ -1,28 +1,167 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
         <meta charset="utf-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
         <title>Node-HTOP</title>
         <meta name="description" content="Node-HTOP" />
         <meta name="viewport" content="width=device-width" />
-        
+
+        <link href='http://fonts.googleapis.com/css?family=Geo' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" type="text/css" href="js/lib/bootstrap/bootstrap/css/bootstrap.min.css" />
+
         <script  type="text/javascript" src="js/lib/jquery/jquery.min.js"></script>
+        <script  type="text/javascript" src="js/lib/bootstrap/bootstrap/js/bootstrap.min.js"></script>
         <script  type="text/javascript" src="js/lib/socket.io-client/dist/socket.io.min.js"></script>
         
+        <style type="text/css">
+            .page-header h1 {
+                font-family: 'Geo', sans-serif;
+            }
+            .controls{
+                padding-bottom:.3em;
+                border-bottom:solid 1px #ccc;
+                margin-bottom: 1em; 
+            }
+        </style>
+
         <script type="text/javascript">
         $(document).ready(function(){
-            var socket = io.connect('http://node-htop.krampstudio.c9.io/stat');
-            var container = $('#stats');
-            socket.on('stat', function (data) {
-                console.log('got stats of ' + data.type)
-                container.append(JSON.stringify(data));
+            $('#start').removeClass('disabled');
+            msg('info', 'Ready');            
+
+            function msg(type, text, clear){
+                var $msgBox = $('#messages');
+                if(clear === true){
+                    $msgBox.empty();
+                }
+                $msgBox.append("<p class='text-"+type+"'>"+text+"</p>");
+            }
+
+            function toggleCtrlState(){
+                $('.controls .btn').toggleClass('disabled');
+            }
+            
+            //button controls
+            $('#start').click(function(){
+                toggleCtrlState(); 
+                start();
+                return false;
             });
+            $('#stop').click(function(){
+                toggleCtrlState(); 
+                stop();
+                return false;
+            });
+            
+            var StatDisplayer = {
+                _containers : {
+                    uptime  : $('#uptime > .value'),
+                    loadP1  : $('#loadavg .p1'),
+                    loadP5  : $('#loadavg .p5'),
+                    loadP15 : $('#loadavg .p15'),
+                    memFree : $('#mem .memfree'),
+                    memBar  : $('#mem > .progress > .bar-success'),
+                    swapFree: $('#swap .swapfree'),
+                    swapBar : $('#swap > .progress > .bar-success')
+                },
+
+                _zprep : function(i){
+                    return (i >= 0 && i < 10) ? '0' + i : i;
+                },
+
+                _dec : function(i, num){
+                    var f = Math.pow(10, num);
+                    return Math.round(i * f) / f;
+                }, 
+
+                uptime : function(values){
+                    var h = Math.floor(values.uptime / 3600),
+                            m = Math.floor((values.uptime / 60) % 60),
+                            s = values.uptime % 60;
+                     this._containers.uptime.text(this._zprep(h) + ':' + this._zprep(m) + ':' + this._zprep(s));
+                },
+    
+                load : function(values){
+                    this._containers.loadP1.text(this._dec(values.p1, 2));
+                    this._containers.loadP5.text(this._dec(values.p5, 2));
+                    this._containers.loadP15.text(this._dec(values.p15, 2));
+                },
+                
+                mem : function(values){
+                    var mu = values.memtotal - values.memfree,
+                        mpu = this._dec(((mu * 100)  / values.memtotal), 1),
+                        mpf = this._dec(100 - mpu, 1),
+                        su = values.swaptotal - values.swapfree,
+                        spu = this._dec(((su * 100) / values.swaptotal), 1),
+                        spf = this._dec(100 - spu, 1);
+                    this._containers.memFree.text(mpf);
+                    this._containers.memBar.width(mpu + '%');
+                    this._containers.swapFree.text(spf);
+                    this._containers.swapBar.width(spu + '%');
+                }
+            };
+
+            var statSock = null;
+            function start(){
+                if(statSock === null){                
+                    statSock= io.connect('/stat');
+                    statSock.on('stat', function (data) {
+                        var displayer = StatDisplayer[data.type];
+                        if(typeof displayer === 'function'){
+                            displayer.call(StatDisplayer, data.values);
+                        }
+                    });
+                } else {
+                    statSock.socket.reconnect();
+                }
+                statSock.on('connect', function(){
+                    msg('success', "Retrieving data...", true);
+                });
+            }
+            function stop(){
+                if(statSock){
+                    statSock.socket.disconnect();
+                    msg('info', "Stopped", true);
+                }
+            }
         });
         </script>
     </head>
     <body>
-        <h1>Node-HTOP</h1>
-        <div id="stats"></div>
+        <div class="container-fluid">
+            <div class="page-header">
+                <h1>Node HTOP <small>helps you to poll system stats</small></h1>
+            </div>
+            <div class="row-fluid controls">
+                <div class="span2">
+                    <a id="start" class="btn btn-success disabled" href="#"><i class="icon-play icon-white"></i> Start</a>
+                    <a id="stop" class="btn btn-danger disabled" href="#"><i class="icon-stop icon-white"></i> Stop</a>
+                </div>
+                <div id='messages' class="span10"></div>
+            </div>
+            <div class="row-fluid">
+                <div id="uptime" class="span3">Uptime: <span class="value">0</span></div>
+                <div id="loadavg" class="span6">Load Avg: <span class="p1">0</span>, <span class="p5">0</span>, <span class="p15">0</span></div>
+                <div id="uptime" class="span3"><span class="value"></span></div>
+            </div>
+            <div id="mem"  class="row-fluid">    
+                <div class="span3">System Memory</div>
+                <div class="progress span6">
+                    <div class="bar bar-success" style="width: 0%;"></div>
+                    <div class="bar bar-warning" style="width: 0%;"></div>
+                    <div class="bar bar-danger" style="width: 0%;"></div>
+                </div>
+                <div class="span3"><span class="memfree">0</span>% free</div>
+            </div>
+            <div id="swap" class="row-fluid">    
+                <div class="span3">System Swap</div>
+                <div class="progress span6">
+                    <div class="bar bar-success" style="width: 0%;"></div>
+                    <div class="bar bar-warning" style="width: 0%;"></div>
+                    <div class="bar bar-danger" style="width: 0%;"></div>
+                </div>
+                <div class="span3"><span class="swapfree">0</span>% free</div>
+            </div>
+        </div>
     </body>
 </html>
