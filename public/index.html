@@ -53,6 +53,12 @@
                 return false;
             });
             
+            function getSysInfos(){
+                $.getJSON('/sysinfos', function(data){
+
+                }
+            }
+            
             var StatDisplayer = {
                 _containers : {
                     uptime  : $('#uptime > .value'),
