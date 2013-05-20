@@ -26,8 +26,11 @@
 
         <script type="text/javascript">
         $(document).ready(function(){
-            $('#start').removeClass('disabled');
-            msg('info', 'Ready');            
+            msg('info', 'Retrieving system infos...');
+            getSysInfos(function(){
+                $('#start').removeClass('disabled');
+                msg('info', 'Ready', true);            
+            });
 
             function msg(type, text, clear){
                 var $msgBox = $('#messages');
@@ -53,10 +56,15 @@
                 return false;
             });
             
-            function getSysInfos(){
+            function getSysInfos(cb){
                 $.getJSON('/sysinfos', function(data){
-
-                }
+                    if(data){
+                        $('#platform').text(data.platform);
+                        $('#cpus > .count').text(data.cpus.count);
+                        $('#cpus > .model').text(data.cpus.model);
+                        cb();
+                     }
+                });
             }
             
             var StatDisplayer = {
@@ -146,9 +154,12 @@
                 <div id='messages' class="span10"></div>
             </div>
             <div class="row-fluid">
-                <div id="uptime" class="span3">Uptime: <span class="value">0</span></div>
-                <div id="loadavg" class="span6">Load Avg: <span class="p1">0</span>, <span class="p5">0</span>, <span class="p15">0</span></div>
-                <div id="uptime" class="span3"><span class="value"></span></div>
+                <div id="platform" class="span3"></div>
+                <div id="cpus" class="span9"><span class="count">0</span> x <span class="model">0</span></div>
+            </div>
+            <div class="row-fluid">
+                <div id="uptime" class="span3">Uptime : <span class="value">0</span></div>
+                <div id="loadavg" class="span9">Load Avg : <span class="p1">0</span>, <span class="p5">0</span>, <span class="p15">0</span></div>
             </div>
             <div id="mem"  class="row-fluid">    
                 <div class="span3">System Memory</div>
