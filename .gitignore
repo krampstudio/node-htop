@@ -1,6 +1,8 @@
 #installed deps, logs, buils 
 node_modules
+
 public/js/lib/*
+public/js/app.min.js
 npm-debug.log
 build
 

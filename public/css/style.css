@@ -1,0 +1,15 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+a {
+  color: #00B7FF;
+}
+.page-header{
+    font-family: 'Geo', sans-serif;
+}
+.controls{
+    padding-bottom:.3em;
+    border-bottom:solid 1px #ccc;
+    margin-bottom: 1em; 
+}
