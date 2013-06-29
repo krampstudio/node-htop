@@ -4,13 +4,16 @@ var express = require('express'),
     path = require('path'),
     app = express(),
     server = http.createServer(app),
-    io = require('socket.io').listen(server),
     logger = require('./lib/logger')(7);
+    io = require('socket.io').listen(server, {logger : logger});
 
 //set up middleware
 app.set('port', process.env.PORT || 3000);
 app.use(express.favicon());
-app.use(express.logger('dev'));
+app.use(function(req, res, next){
+    logger.log('info', require('util').inspect(req.url));
+    next();
+});
 app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.use(express.cookieParser('secret'));
