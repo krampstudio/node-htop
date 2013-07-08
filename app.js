@@ -1,11 +1,21 @@
+//imports
 var express = require('express'), 
     controllers = require('./controller'), 
     http = require('http'), 
     path = require('path'),
-    app = express(),
-    server = http.createServer(app),
-    logger = require('./lib/logger')(7);
-    io = require('socket.io').listen(server, {logger : logger});
+    fs = require('fs'),
+    log = require('./lib/logger'),
+    sio = require('socket.io');
+
+//create an http server using express
+var app = express();
+var server = http.createServer(app);
+
+//set up the logger
+var logger = log(7, true, './logs/node-htop.log'); 
+
+//bind the server to socket.io
+var io = sio.listen(server, {logger : logger});
 
 //set up middleware
 app.set('port', process.env.PORT || 3000);
@@ -17,7 +27,6 @@ app.use(function(req, res, next){
 app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.use(express.cookieParser('secret'));
-app.use(express.session());
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.errorHandler());
