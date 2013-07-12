@@ -32,7 +32,8 @@
     "less-middleware": "0.1.x",
     "caterpillar": "~2.0.2",
     "caterpillar-filter": "~2.0.1",
-    "caterpillar-human": "~2.1.0"
+    "caterpillar-human": "~2.1.0",
+    "async" : "*"
   },
   "devDependencies": {
     "grunt": "~0.4.x",
