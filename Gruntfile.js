@@ -35,9 +35,9 @@ module.exports = function(grunt) {
         },
         uglify: {
             options: {
-                banner:     '/* <%= pkg.name %> \n' 
-                        +   '   <%= pkg.author.name %> <%= pkg.author.email %> copyright <%= grunt.template.today("yyyy") %> \n'
-                        +   '   @license <%= pkg.licenses[0].type %> <%= pkg.licenses[0].url %>  \n*/\n'
+                banner: '/* <%= pkg.name %> \n'  +   
+                        '   <%= pkg.author.name %> <%= pkg.author.email %> copyright <%= grunt.template.today("yyyy") %> \n' +
+                        '   @license <%= pkg.licenses[0].type %> <%= pkg.licenses[0].url %>  \n*/\n'
             },
             build: {
                 src: 'public/js/app.js',
@@ -53,14 +53,28 @@ module.exports = function(grunt) {
             dist: {
                 src: buildDir + "/**"
             }
-        }
+        },
+        bower : {
+            install :  {}
+        },
+        bower_postinst: {
+            dist: {
+                options: {
+                    components: {
+                        'bootstrap': ['npm', {'make': 'bootstrap' }]
+                    }
+                }
+            }
+        }  
     });
 
     grunt.loadNpmTasks('grunt-jsdoc');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-nodeunit');
-    
+    grunt.loadNpmTasks('grunt-bower-task');
+    grunt.loadNpmTasks('grunt-bower-postinst');   
+ 
     //custom clean
     grunt.registerMultiTask('clean', 'Clean up stuff.', function() {
         var fileApi = grunt.file,
@@ -107,12 +121,13 @@ module.exports = function(grunt) {
                     } 
                     grunt.log.ok();
                     done();
-                })
+                });
             }
         });
     });
 
     // Default task.
+    grunt.registerTask('install', ['bower', 'bower_postinst']);
     grunt.registerTask('default', ['jshint:server', 'nodeunit']);
     grunt.registerTask('test', ['nodeunit']);
 };

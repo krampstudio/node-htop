@@ -41,6 +41,8 @@
     "grunt-contrib-nodeunit": "latest",
     "grunt-contrib-uglify" : "latest",
     "grunt-jsdoc": "latest",
+    "grunt-bower-task" : "latest",
+    "grunt-bower-postinst" : "latest",
     "nodeunit": "latest"
   },
   "keywords": [
