@@ -53,6 +53,8 @@ $(document).ready(function(){
             loadP15 : $('#loadavg .p15'),
             memFree : $('#mem .memfree'),
             memBar  : $('#mem > .progress > .bar-success'),
+            nodeFree: $('#node-mem .memfree'),
+            nodeBar : $('#node-mem > .progress > .bar-success'), 
             swapFree: $('#swap .swapfree'),
             swapBar : $('#swap > .progress > .bar-success')
         },
@@ -115,6 +117,14 @@ $(document).ready(function(){
             this._containers.memBar.width(mpu + '%');
             this._containers.swapFree.text(spf);
             this._containers.swapBar.width(spu + '%');
+        },
+        
+        'node-mem' : function(values){
+            var mu = values.heapUsed,
+                mpu = this._dec(((mu * 100)  / values.heapTotal), 1),
+                mpf = this._dec(100 - mpu, 1);
+            this._containers.nodeFree.text(mpf);
+            this._containers.nodeBar.width(mpu + '%');
         }
     };
 
