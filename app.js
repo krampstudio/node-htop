@@ -1,27 +1,27 @@
+//first of all initialize the logger
+var lf = require('./lib/logFactory').LogFactory;
+var logger = lf.init(lf.levels.debug, true, './logs/node-htop.log'); 
+
 //imports
 var express = require('express'), 
-    controllers = require('./controller'), 
     http = require('http'), 
     path = require('path'),
     fs = require('fs'),
-    lf = require('./lib/logFactory')(),
-    sio = require('socket.io');
+    sio = require('socket.io'),
+    controllers = require('./controller');
 
 //create an http server using express
 var app = express();
 var server = http.createServer(app);
 
-//set up the logger
-lf.init(lf.levels.debug, true, './logs/node-htop.log'); 
-
 //bind the server to socket.io
-var io = sio.listen(server, {logger : lf.logger});
+var io = sio.listen(server, {logger : logger});
 
 //set up middlewares
 app.set('port', process.env.PORT || 3000);
 app.use(express.favicon());
 app.use(function(req, res, next){
-    lf.logger.log('info', require('util').inspect(req.url));
+    logger.log('info', require('util').inspect(req.url));
     next();
 });
 app.use(express.bodyParser());
@@ -37,5 +37,5 @@ controllers.stat(io);
 
 //start the server
 server.listen(app.get('port'), function listenServer(){
-  lf.logger.log('info', 'Express server listening on port ' + app.get('port'));
+  logger.log('info', 'Express server listening on port ' + app.get('port'));
 });
