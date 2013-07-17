@@ -51,17 +51,21 @@ module.exports = function(grunt) {
         },
         clean : {
             dist: {
-                src: buildDir + "/**"
+                src: [buildDir + "/**", 'public/js/lib']
             }
         },
         bower : {
-            install :  {}
+            install :  {
+                options : {
+                    targetDir : buildDir + '/components'
+                }
+            }
         },
         bower_postinst: {
             dist: {
                 options: {
                     components: {
-                        'bootstrap': ['npm', {'make': 'bootstrap' }]
+                        'bootstrap': ['npm', {'npm' : ['install', '--saveDev', 'recess@1.1.8']}, {'make': 'bootstrap' }]
                     }
                 }
             }
@@ -86,7 +90,7 @@ module.exports = function(grunt) {
             if (!fileApi.exists(filepath)) {
                 return;
             }
-            grunt.log.write('Cleaning "' + filepath + '"...');
+            grunt.log.write('Cleaning "' + filepath + '"... ');
 
             try {
                 fileApi.delete(filepath);
@@ -127,7 +131,7 @@ module.exports = function(grunt) {
     });
 
     // Default task.
-    grunt.registerTask('install', ['bower', 'bower_postinst']);
+    grunt.registerTask('install', ['clean', 'mkdir', 'bower', 'bower_postinst']);
     grunt.registerTask('default', ['jshint:server', 'nodeunit']);
     grunt.registerTask('test', ['nodeunit']);
 };
