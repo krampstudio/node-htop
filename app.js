@@ -20,8 +20,8 @@ var io = sio.listen(server, {logger : logger});
 //set up middlewares
 app.set('port', process.env.PORT || 3000);
 app.use(express.favicon());
-app.use(function(req, res, next){
-    logger.log('info', require('util').inspect(req.url));
+app.use(function logRequest(req, res, next){
+    logger.log('info', require('util').inspect(req.url) + 'by process ' + process.id);
     next();
 });
 app.use(express.bodyParser());
