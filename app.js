@@ -8,6 +8,11 @@ var express = require('express'),
     path = require('path'),
     fs = require('fs'),
     sio = require('socket.io'),
+    RedisStore = require("socket.io/lib/stores/redis"),
+    redis = require("socket.io/node_modules/redis"),
+    pub = redis.createClient(16379, process.env.IP),
+    sub = redis.createClient(16379, process.env.IP),
+    client = redis.createClient(16379, process.env.IP),
     controllers = require('./controller');
 
 //create an http server using express
@@ -15,7 +20,14 @@ var app = express();
 var server = http.createServer(app);
 
 //bind the server to socket.io
-var io = sio.listen(server, {logger : logger});
+var io = sio.listen(server, {
+    logger : logger,
+    store : new RedisStore({
+        redisPub : pub,
+        redisSub : sub,
+        redisClient : client
+    })
+});
 
 //set up middlewares
 app.set('port', process.env.PORT || 3000);
