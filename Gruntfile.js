@@ -35,7 +35,7 @@ module.exports = function(grunt) {
         },
         uglify: {
             options: {
-                banner: '/* <%= pkg.name %> \n'  +   
+                banner: '/* <%= pkg.name %> \n'  +
                         '   <%= pkg.author.name %> <%= pkg.author.email %> copyright <%= grunt.template.today("yyyy") %> \n' +
                         '   @license <%= pkg.licenses[0].type %> <%= pkg.licenses[0].url %>  \n*/\n'
             },
@@ -69,7 +69,7 @@ module.exports = function(grunt) {
                     }
                 }
             }
-        }  
+        }
     });
 
     grunt.loadNpmTasks('grunt-jsdoc');
@@ -77,15 +77,15 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-nodeunit');
     grunt.loadNpmTasks('grunt-bower-task');
-    grunt.loadNpmTasks('grunt-bower-postinst');   
- 
+    grunt.loadNpmTasks('grunt-bower-postinst');
+
     //custom clean
     grunt.registerMultiTask('clean', 'Clean up stuff.', function() {
         var fileApi = grunt.file,
             files = grunt.task.current.filesSrc;
-            
+
         grunt.log.debug("will clean up " + files);
-        
+
         files.forEach(function(filepath) {
             if (!fileApi.exists(filepath)) {
                 return;
@@ -103,14 +103,14 @@ module.exports = function(grunt) {
             }
         });
     });
-    
+
     grunt.registerMultiTask('mkdir', 'creates stuff.', function() {
         var fs = require('fs'),
             done = grunt.task.current.async(),
             dir = grunt.task.current.data.dir;
-            
+
         grunt.log.debug("will mkdir " + dir);
-            
+
         fs.exists(dir, function(exists){
             if(exists === true){
                 grunt.log.debug("Already exists");
@@ -122,7 +122,7 @@ module.exports = function(grunt) {
                         grunt.verbose.error(err);
                         grunt.fail.warn('mkdir failed.');
                         return;
-                    } 
+                    }
                     grunt.log.ok();
                     done();
                 });
