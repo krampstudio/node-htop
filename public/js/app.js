@@ -1,9 +1,9 @@
 $(document).ready(function(){
-    
+
     /**
      * Display a message
      * @param {String} type - the message type in info, alert, warn, etc.
-     * @param {String} text - the message 
+     * @param {String} text - the message
      * @param {Boolean} clear - clear the msg box
      */
     function msg(type, text, clear){
@@ -20,7 +20,7 @@ $(document).ready(function(){
     function toggleCtrlState(){
         $('.controls .btn').toggleClass('disabled');
     }
-    
+
     /**
      * Request informations about system
      * @param {Function} cb - executed once the infos are retireved
@@ -35,13 +35,13 @@ $(document).ready(function(){
              }
         });
     }
-    
+
     /**
      * Helps you to translate stats to ui widgets
      * @class
      */
     var StatDisplayer = {
-        
+
         /**
          * store the jquery elements for each stat widget
          * @type {Object}
@@ -54,7 +54,7 @@ $(document).ready(function(){
             memFree : $('#mem .memfree'),
             memBar  : $('#mem > .progress > .bar-success'),
             nodeFree: $('#node-mem .memfree'),
-            nodeBar : $('#node-mem > .progress > .bar-success'), 
+            nodeBar : $('#node-mem > .progress > .bar-success'),
             swapFree: $('#swap .swapfree'),
             swapBar : $('#swap > .progress > .bar-success')
         },
@@ -74,12 +74,12 @@ $(document).ready(function(){
          * @private
          * @param {Number} i - the input number
          * @param {Number} i - the number of decimals
-         * @returns {Number} the output 
+         * @returns {Number} the output
          */
         _dec : function(i, num){
             var f = Math.pow(10, num);
             return Math.round(i * f) / f;
-        }, 
+        },
 
         /**
          * display the uptime
@@ -101,7 +101,7 @@ $(document).ready(function(){
             this._containers.loadP5.text(this._dec(values.p5, 2));
             this._containers.loadP15.text(this._dec(values.p15, 2));
         },
-        
+
         /**
          * display the memory
          * @param {Object} values - the stats
@@ -118,7 +118,7 @@ $(document).ready(function(){
             this._containers.swapFree.text(spf);
             this._containers.swapBar.width(spu + '%');
         },
-        
+
         'node-mem' : function(values){
             var mu = values.heapUsed,
                 mpu = this._dec(((mu * 100)  / values.heapTotal), 1),
@@ -130,12 +130,12 @@ $(document).ready(function(){
 
     //keep the socket instance
     var statSock = null;
-    
+
     /**
      * Start stat retrieving using a web socket
      */
     function start(){
-        if(statSock === null){                
+        if(statSock === null){
             statSock= io.connect('/stat');
             statSock.on('stat', function (data) {
                 var displayer = StatDisplayer[data.type];
@@ -150,7 +150,7 @@ $(document).ready(function(){
             msg('success', "Retrieving data...", true);
         });
     }
-    
+
     /**
      * Stop stat retrieval
      */
@@ -160,27 +160,27 @@ $(document).ready(function(){
             msg('info', "Stopped", true);
         }
     }
-    
-    //sequential 
-    
+
+    //sequential
+
     msg('info', 'Retrieving system infos...');
-    
+
     //get system data
     getSysInfos(function(){
         $('#start').removeClass('disabled');
-        msg('info', 'Ready', true);            
+        msg('info', 'Ready', true);
     });
-    
-    //bind start 
+
+    //bind start
     $('#start').click(function(){
-        toggleCtrlState(); 
+        toggleCtrlState();
         start();
         return false;
     });
-    
+
     //bind stop
     $('#stop').click(function(){
-        toggleCtrlState(); 
+        toggleCtrlState();
         stop();
         return false;
     });
