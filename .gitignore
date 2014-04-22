@@ -5,7 +5,6 @@ public/js/lib/*
 public/js/app.min.js
 npm-debug.log
 build
-logs
 
 #ide files
 .c9revisions
